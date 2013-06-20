@@ -7,9 +7,12 @@ html {
 body {
   margin: 0;
   background: #f6f6f6;
-  font: 400 2em arial, sans-serif;
+  font: 400 1em arial, sans-serif;
 }
 
 canvas {
   display: block;
+}
+canvas:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3) inset;
 }
