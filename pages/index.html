@@ -6,8 +6,13 @@
   <link rel="stylesheet" type="text/css" href="/assets/css/paint.ui.css" />
 </head>
 <body>
-  <canvas id="paint" resize></canvas>
-  <script type="text/javascript" src="/assets/js/lib/paper.js"></script>
-  <script type="text/paperscript" data-paper-canvas="paint" src="/assets/js/paint.js"></script>
+  <menu>
+    <button type="button" id="line">line</button>
+    <button type="button" id="arc">arc</button>
+  </menu>
+
+  <canvas id="paint" data-paper-resize="true"></canvas>
+  <script src="/assets/js/lib/paper.js"></script>
+  <script src="/assets/js/paint.js"></script>
 </body>
 </html>

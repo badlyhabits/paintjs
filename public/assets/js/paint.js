@@ -1,35 +1,79 @@
-(function () {
-  // Create a Paper.js Path to draw a line into it:
-  var path = new Path();
-  // Give the stroke a color
-  path.strokeColor = 'black';
-  var start = new Point(0, 0);
-  // Move to start and draw a line from there
-  path.moveTo(start);
-  // Note the plus operator on Point objects.
-  // PaperScript does that for us, and much more!
-  path.lineTo(start + [ 200, 200 ]);
-})();
+paper.install(window);
 
-(function () {
-  var path = new Path.Circle({
-    center: view.center,
-    radius: 30,
-    strokeColor: 'black'
-  });
+var paint = document.getElementById("paint");
+paper.setup(paint);
 
-  function onResize(event) {
-    // Whenever the window is resized, recenter the path:
-    alert('');
-    path.position = view.center;
+// var path = new Path.Rectangle([50, 50], [50, 50]);
+// path.fillColor = "black";
+
+// var rect = new Path.Rectangle(new Point(100, 50), new Size(50, 50));
+// rect.fillColor = "green";
+
+// var p = new Path.Rectangle(new Point(100, 100), new Size(50, 50));
+// p.fillColor = "black";
+
+// var finalrect = new Path.Rectangle(new Point(50, 100), new Size(50, 50));
+// finalrect.fillColor = "green";
+
+// function onFrame(event) {
+//   path.rotate(-2);
+//   p.rotate(2);
+//   rect.rotate(2);
+//   finalrect.rotate(2);
+// }
+
+// paper.view.draw();
+// // paper.view.setOnFrame(onFrame);
+
+var penTool, arcTool;
+
+var testPath = new Path;
+testPath.strokeColor = "red";
+
+// window.onload = function() {
+  var path;
+
+  path = new Path();
+
+  function onMouseDown(event) {
+    path = new Path();
+    path.strokeColor = "black";
+    path.add(event.point);
   }
-})();
 
-var get_id = function(id) {
-  return document.getElementById(id);
-};
+  function onMouseDragPoint(event) {
+    path.add(event.point);
+  }
 
-get_id("paint");
+  function onMouseDragArc(event) {
+    path.arcTo(event.point);
+  }
 
-window.onload = function() {
-};
+  function onFrame(event) {
+    path.rotate(1);
+  }
+
+  penTool = new Tool();
+  penTool.onMouseDown = onMouseDown;
+  penTool.onMouseDrag = onMouseDragPoint;
+
+  arcTool = new Tool();
+  arcTool.minDistance = 20;
+  arcTool.onMouseDown = onMouseDown;
+  arcTool.onMouseDrag = onMouseDragArc;
+
+
+  var btnLine = document.getElementById("line");
+  var btnArc  = document.getElementById("arc");
+
+  btnLine.addEventListener("click", function() { penTool.activate(); });
+  btnArc.addEventListener("click", function() { arcTool.activate(); });
+
+  // paper.view.setOnFrame(onFrame);
+// };
+
+
+
+
+
+
