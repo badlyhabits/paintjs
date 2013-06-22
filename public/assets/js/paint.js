@@ -3,77 +3,58 @@ paper.install(window);
 var paint = document.getElementById("paint");
 paper.setup(paint);
 
-// var path = new Path.Rectangle([50, 50], [50, 50]);
-// path.fillColor = "black";
+var penTool, arcTool, rectTool;
+var path;
 
-// var rect = new Path.Rectangle(new Point(100, 50), new Size(50, 50));
-// rect.fillColor = "green";
+function onMouseDown(event) {
+  path = new Path();
+  path.strokeColor = "black";
+  path.add(event.point);
+}
 
-// var p = new Path.Rectangle(new Point(100, 100), new Size(50, 50));
-// p.fillColor = "black";
+function onMouseDragPoint(event) {
+  path.add(event.point);
+}
 
-// var finalrect = new Path.Rectangle(new Point(50, 100), new Size(50, 50));
-// finalrect.fillColor = "green";
+function onMouseDragArc(event) {
+  path.arcTo(event.point);
+}
+
+function onMouseDragRect(event) {
+
+}
+
+function onMouseUpRect(event) {
+  var rect = new Rectangle({ x: 10, y: 20, width: 100, height: 200 });
+  rect.size = [200, 300];
+  console.log(rect);
+}
 
 // function onFrame(event) {
-//   path.rotate(-2);
-//   p.rotate(2);
-//   rect.rotate(2);
-//   finalrect.rotate(2);
+//   path.rotate(1);
 // }
 
-// paper.view.draw();
-// // paper.view.setOnFrame(onFrame);
+penTool = new Tool();
+penTool.onMouseDown = onMouseDown;
+penTool.onMouseDrag = onMouseDragPoint;
 
-var penTool, arcTool;
+arcTool = new Tool();
+arcTool.minDistance = 20;
+arcTool.onMouseDown = onMouseDown;
+arcTool.onMouseDrag = onMouseDragArc;
 
-var testPath = new Path;
-testPath.strokeColor = "red";
+rectTool = new Tool();
+rectTool.onMouseDown = onMouseDown;
+rectTool.onMouseDrag = onMouseDragRect;
+rectTool.onMouseUp   = onMouseUpRect;
 
-// window.onload = function() {
-  var path;
+var btnLine = document.getElementById("btn-line");
+var btnArc  = document.getElementById("btn-arc");
+var btnRect = document.getElementById("btn-rect");
 
-  path = new Path();
-
-  function onMouseDown(event) {
-    path = new Path();
-    path.strokeColor = "black";
-    path.add(event.point);
-  }
-
-  function onMouseDragPoint(event) {
-    path.add(event.point);
-  }
-
-  function onMouseDragArc(event) {
-    path.arcTo(event.point);
-  }
-
-  function onFrame(event) {
-    path.rotate(1);
-  }
-
-  penTool = new Tool();
-  penTool.onMouseDown = onMouseDown;
-  penTool.onMouseDrag = onMouseDragPoint;
-
-  arcTool = new Tool();
-  arcTool.minDistance = 20;
-  arcTool.onMouseDown = onMouseDown;
-  arcTool.onMouseDrag = onMouseDragArc;
-
-
-  var btnLine = document.getElementById("line");
-  var btnArc  = document.getElementById("arc");
-
-  btnLine.addEventListener("click", function() { penTool.activate(); });
-  btnArc.addEventListener("click", function() { arcTool.activate(); });
-
-  // paper.view.setOnFrame(onFrame);
-// };
-
-
-
+btnLine.addEventListener("click", function(e) { penTool.activate(); });
+btnRect.addEventListener("click", function(e) { rectTool.activate(); });
+btnArc.addEventListener("click", function(e) { arcTool.activate(); });
 
 
 
