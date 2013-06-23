@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>PaintJS - FMI Computer Graphics Project</title>
+  <link rel="stylesheet" type="text/css" href="/assets/css/paint.ui.css" />
+</head>
+<body>
+  <menu id="tools-menu" class="pull-left">
+    <h1>Tools</h1>
+    <button type="button" id="btn-line" class="btn-active">line</button>
+    <button type="button" id="btn-pencil">pencil</button>
+    <button type="button" id="btn-rect">rect</button>
+    <button type="button" id="btn-circle">circle</button>
+    <button type="button" id="btn-arc">arc</button>
+  </menu>
+  <menu class="pull-right">
+    <h1>Helpers</h1>
+    <button type="button" id="btn-color">color</button>
+    <button type="button" id="btn-stroke-width">stroke width</button>
+    <button type="button" id="btn-close-path">close path</button>
+    <button type="button" id="btn-zoom-in">+</button>
+    <button type="button" id="btn-zoom-out">-</button>
+  </menu>
+  <canvas id="paint" data-paper-resize="true"></canvas>
+  <script src="/assets/js/lib/jquery-2.0.2.js"></script>
+  <script src="/assets/js/lib/paper.js"></script>
+  <script src="/assets/js/paint.js"></script>
+</body>
+</html>
