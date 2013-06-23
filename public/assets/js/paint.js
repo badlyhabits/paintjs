@@ -1,92 +1,154 @@
-paper.install(window);
+;(function(window, document, paper, $, undefined) {
 
-;(function() {
+  paper.install(window);
+  paper.setup("paint");
+  paper.view.setZoom(1);
 
-  var $btns = $("#js-tools-menu").find("button"),
-      btnActiveClass = "btn-active";
+  var $toolsMenuButtons = $("#tools-menu").find("button"),
+      btnActiveClass = "btn-active",
+      $btnZoomIn = $("#btn-zoom-in"),
+      $btnZoomOut = $("#btn-zoom-out"),
+      $btnClosePath = $("#btn-close-path");
 
+
+  /***************  Menu Tools / Helpers  ***************/
   function btnClicked(e) {
     var $that = $(this);
-    $btns.removeClass(btnActiveClass)
+    $toolsMenuButtons.removeClass(btnActiveClass);
     $that.addClass(btnActiveClass).data("tool").activate();
   }
 
   function closePath(e) {
-    path.closed = true;
+    if (_path.closed === true) return;
+    _path.closed = true;
+    console.log("path closed");
   }
 
-  function zoomInPaper(e) {
+  function setBtnZoomText() {
     var zoom = paper.view.getZoom();
-    paper.view.setZoom(zoom + 1);
-  }
-
-  function zoomOutPaper(e) {
-    var zoom = paper.view.getZoom();
-    if (zoom > 1) {
-      paper.view.setZoom(zoom - 1);
+    if (zoom === 1) {
+      $btnZoomIn.text("+");
+    }
+    else {
+      $btnZoomIn.text("+ " + zoom);
     }
   }
 
-  $btns.on("click", btnClicked);
-
-  $("#btn-close-path").on("click", closePath);
-  $("#btn-paper-zoom-in").on("click", zoomInPaper);
-  $("#btn-paper-zoom-out").on("click", zoomOutPaper);
-
-})();
-
-
-var paint = $("#paint")[0];
-paper.setup(paint);
-paper.view.setZoom(1);
-
-var path = new Path();
-
-var tools = {
-  pencil: { },
-  rect: { },
-  circle: { },
-  arc: { }
-};
-
-for (var t in tools) {
-  tools[t] = new Tool();
-  tools[t]._name = t;
-  tools[t]._btnId = "btn-" + t;
-  $("#" + tools[t]._btnId).data("tool", tools[t]);
-}
-
-var strColor = "black";
-
-tools.pencil.methods = {
-  // m === mouse
-  m_down: function(event) {
-    path = new Path();
-    path.strokeColor = strColor;
-    path.add(event.point);
-  },
-  m_drag: function(event) {
-    path.add(event.point);
+  function zoomInPaper(e) {
+    paper.view.setZoom(paper.view.getZoom() + 1);
+    setBtnZoomText();
   }
-};
 
-tools.arc.methods = {
-  m_down: function(event) {
-    path = new Path();
-    path.strokeColor = strColor;
-    path.add(event.point);
-  },
-  m_drag: function(event) {
-    path.arcTo(event.point);
+  function zoomOutPaper(e) {
+    if (paper.view.getZoom() <= 1) return;
+    paper.view.setZoom(paper.view.getZoom() - 1);
+    setBtnZoomText();
   }
-};
-
-// pencil
-tools.pencil.onMouseDown = tools.pencil.methods.m_down;
-tools.pencil.onMouseDrag = tools.pencil.methods.m_drag;
-tools.pencil.onMouseUp = tools.pencil.methods.m_up;
 
 
-tools.arc.onMouseDown = tools.arc.methods.m_down;
-tools.arc.onMouseDrag = tools.arc.methods.m_drag;
+  /*************** Menu Tools / Helpers / Events  ***************/
+  $toolsMenuButtons.on("click", btnClicked);
+
+  $btnClosePath.on("click", closePath);
+  $btnZoomIn.on("click.zoom-in", zoomInPaper);
+  $btnZoomOut.on("click.zoom-out", zoomOutPaper);
+
+
+
+  /*************** PaintJS Tools  ***************/
+  /*************** PaintJS Tools  ***************/
+
+  var _path  = new Path(),
+      _point = new Point(),
+      _rect  = new Rectangle(),
+
+      opts  = {
+        strColor: "black"
+      },
+
+      tools = {
+        line: { },
+        pencil: { },
+        rect: { },
+        circle: { },
+        arc: { }
+      },
+
+      tls;
+
+
+  for (var t in tools) {
+    tools[t] = new Tool();
+    tools[t]._btnId = "btn-" + t;
+    $("#" + tools[t]._btnId).data("tool", tools[t]);
+  }
+
+  window.tls = tls = tools;
+  window._path = _path;
+  window._rect = _rect;
+
+  /***************  Line  ***************/
+
+  tls.line.onMouseDown = function(event) {
+    if (_path) {
+      _path.selected = false;
+    }
+
+    _path = new Path({
+      segments: [event.point],
+      strokeColor : opts.strColor,
+      fullySelected: true
+    });
+  };
+
+  tls.line.onMouseDrag = function(event) {
+    _path.add(event.point);
+  };
+
+  tls.line.onMouseUp = function(element) {
+    _path.smooth();
+    _path.simplify(10)
+    _path.fullySelected = false;
+  }
+
+  /***************  Pencil  ***************/
+  tls.pencil.onMouseDown = function(event) {
+    _path = new Path();
+    _path.strokeColor = opts.strColor;
+    _path.add(event.point);
+  }
+
+  tls.pencil.onMouseDrag = function(event) {
+    _path.add(event.point);
+  }
+
+  /***************  Circle  ***************/
+  tls.circle.onMouseDown = function(event) {
+    _path = new Path();
+  }
+
+  tls.circle.onMouseDrag = function(event) {
+    _path.add(event.point);
+  }
+
+  tls.circle.onMouseUp = function(event) {
+    var myCircle = new Path.Circle(event.point, 50);
+    myCircle.strokeColor = opts.strColor;
+  }
+
+
+  /***************  Arc  ***************/
+  tls.arc.onMouseDown = function(event) {
+    path = new Path();
+    _path.strokeColor = opts.strColor;
+    _path.add(event.point);
+  }
+
+  tls.arc.onMouseDrag = function(event) {
+    _path.arcTo(event.point);
+    // _path = new Path();
+  }
+
+})(window, document, paper, jQuery);
+
 

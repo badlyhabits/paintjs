@@ -529,7 +529,7 @@ Base.inject({
 				Base.each(hash, function(value, key) {
 					this[key] = value;
 				}, this);
-			}, new Base(), true); 
+			}, new Base(), true);
 		},
 
 		capitalize: function(str) {
@@ -562,7 +562,7 @@ var Callback = {
 		if (entry) {
 			var handlers = this._handlers = this._handlers || {};
 			handlers = handlers[type] = handlers[type] || [];
-			if (handlers.indexOf(func) == -1) { 
+			if (handlers.indexOf(func) == -1) {
 				handlers.push(func);
 				if (entry.install && handlers.length == 1)
 					entry.install.call(this, type);
@@ -865,7 +865,7 @@ var Numerical = new function() {
 				B = A + a,
 				i = 0,
 				m = (n + 1) >> 1,
-				sum = n & 1 ? w[i++] * f(B) : 0; 
+				sum = n & 1 ? w[i++] * f(B) : 0;
 			while (i < m) {
 				var Ax = A * x[i];
 				sum += w[i++] * (f(B + Ax) + f(B - Ax));
@@ -897,18 +897,18 @@ var Numerical = new function() {
 					roots[0] = -c / b;
 					return 1;
 				}
-				return abs(c) < epsilon ? -1 : 0; 
+				return abs(c) < epsilon ? -1 : 0;
 			}
 			var q = b * b - 4 * a * c;
 			if (q < 0)
-				return 0; 
+				return 0;
 			q = sqrt(q);
-			a *= 2; 
+			a *= 2;
 			var n = 0;
 			roots[n++] = (-b - q) / a;
 			if (q > 0)
 				roots[n++] = (-b + q) / a;
-			return n; 
+			return n;
 		},
 
 		solveCubic: function(a, b, c, d, roots) {
@@ -925,17 +925,17 @@ var Numerical = new function() {
 				D = q * q - ppp;
 			b /= 3;
 			if (abs(D) < epsilon) {
-				if (abs(q) < epsilon) { 
+				if (abs(q) < epsilon) {
 					roots[0] = - b;
 					return 1;
-				} 
+				}
 				var sqp = sqrt(p),
 					snq = q > 0 ? 1 : -1;
 				roots[0] = -snq * 2 * sqp - b;
 				roots[1] = snq * sqp - b;
 				return 2;
 			}
-			if (D < 0) { 
+			if (D < 0) {
 				var sqp = sqrt(p),
 					phi = Math.acos(q / (sqp * sqp * sqp)) / 3,
 					t = -2 * sqp,
@@ -1223,7 +1223,7 @@ var Point = Base.extend({
 			return new Point(Math.random(), Math.random());
 		}
 	}
-}, new function() { 
+}, new function() {
 
 	return Base.each(['round', 'ceil', 'floor', 'abs'], function(name) {
 		var op = Math[name];
@@ -1392,7 +1392,7 @@ var Size = Base.extend({
 			return new Size(Math.random(), Math.random());
 		}
 	}
-}, new function() { 
+}, new function() {
 
 	return Base.each(['round', 'ceil', 'floor', 'abs'], function(name) {
 		var op = Math[name];
@@ -1890,7 +1890,7 @@ var Matrix = Base.extend({
 
 	scale: function(scale, center) {
 		var _scale = Point.read(arguments),
-			_center = Point.read(arguments, 0, 0, true); 
+			_center = Point.read(arguments, 0, 0, true);
 		if (_center)
 			this.translate(_center);
 		this._a *= _scale.x;
@@ -1935,7 +1935,7 @@ var Matrix = Base.extend({
 
 	shear: function(point, center) {
 		var _point = Point.read(arguments),
-			_center = Point.read(arguments, 0, 0, true); 
+			_center = Point.read(arguments, 0, 0, true);
 		if (_center)
 			this.translate(_center);
 		var a = this._a,
@@ -2244,9 +2244,9 @@ var Line = Base.extend({
 			}
 			var v2x = x - px,
 				v2y = y - py,
-				ccw = v2x * vy - v2y * vx; 
+				ccw = v2x * vy - v2y * vx;
 			if (ccw === 0) {
-				ccw = v2x * vx + v2y * vy; 
+				ccw = v2x * vx + v2y * vy;
 				if (ccw > 0) {
 					v2x -= vx;
 					v2y -= vy;
@@ -2263,8 +2263,8 @@ var Line = Base.extend({
 				vx -= px;
 				vy -= py;
 			}
-			var m = vy / vx, 
-				b = py - m * px; 
+			var m = vy / vx,
+				b = py - m * px;
 			return (y - (m * x) - b) / Math.sqrt(m * m + 1);
 		}
 	}
@@ -2761,7 +2761,7 @@ var Item = Base.extend(Callback, {
 	},
 
 	setData: function(data) {
-		this._data = data;		
+		this._data = data;
 	},
 
 	getPosition: function() {
@@ -2795,7 +2795,7 @@ var Item = Base.extend(Callback, {
 						? getter : getter && getter[name] || name, arguments[0]);
 			return name == 'getBounds'
 					? LinkedRectangle.create(this, 'setBounds',
-							bounds.x, bounds.y, bounds.width, bounds.height) 
+							bounds.x, bounds.y, bounds.width, bounds.height)
 					: bounds;
 		};
 	},
@@ -3556,7 +3556,7 @@ var Layer = Group.extend({
 		return false;
 	},
 
-	getNextSibling: function getNextSibling() {		
+	getNextSibling: function getNextSibling() {
 		return this._parent ? getNextSibling.base.call(this)
 				: this._project.layers[this._index + 1] || null;
 	},
@@ -4205,7 +4205,7 @@ var Segment = Base.extend({
 
 	_setSelected: function(point, selected) {
 		var path = this._path,
-			selected = !!selected, 
+			selected = !!selected,
 			state = this._selectionState || 0,
 			selection = [
 				!!(state & 4),
@@ -4409,7 +4409,7 @@ var SegmentPoint = Point.extend({
 				x, y, selected;
 			if (!pt) {
 				x = y = 0;
-			} else if ((x = pt[0]) !== undefined) { 
+			} else if ((x = pt[0]) !== undefined) {
 				y = pt[1];
 			} else {
 				if ((x = pt.x) === undefined) {
@@ -4612,7 +4612,7 @@ var Curve = Base.extend({
 				} else {
 					this._path.insert(this._segment2._index, segment);
 				}
-				res = this; 
+				res = this;
 			} else {
 				var end = this._segment2;
 				this._segment2 = segment;
@@ -4721,8 +4721,8 @@ statics: {
 			p7x = u * p4x + t * p5x, p7y = u * p4y + t * p5y,
 			p8x = u * p6x + t * p7x, p8y = u * p6y + t * p7y;
 		return [
-			[p1x, p1y, p3x, p3y, p6x, p6y, p8x, p8y], 
-			[p8x, p8y, p7x, p7y, p5x, p5y, p2x, p2y] 
+			[p1x, p1y, p3x, p3y, p6x, p6y, p8x, p8y],
+			[p8x, p8y, p7x, p7y, p5x, p5y, p2x, p2y]
 		];
 	},
 
@@ -4768,9 +4768,9 @@ statics: {
 
 	getPart: function(v, from, to) {
 		if (from > 0)
-			v = Curve.subdivide(v, from)[1]; 
+			v = Curve.subdivide(v, from)[1];
 		if (to < 1)
-			v = Curve.subdivide(v, (to - from) / (1 - from))[0]; 
+			v = Curve.subdivide(v, (to - from) / (1 - from))[0];
 		return v;
 	},
 
@@ -4805,8 +4805,8 @@ statics: {
 	},
 
 	getBounds: function(v) {
-		var min = v.slice(0, 2), 
-			max = min.slice(), 
+		var min = v.slice(0, 2),
+			max = min.slice(),
 			roots = [0, 0];
 		for (var i = 0; i < 2; i++)
 			Curve._addBounds(v[i], v[i + 2], v[i + 4], v[i + 6],
@@ -4932,7 +4932,7 @@ statics: {
 			tolerance = Numerical.TOLERANCE,
 			minDist = Infinity,
 			minT = 0,
-			max = 1 + tolerance; 
+			max = 1 + tolerance;
 
 		function refine(t) {
 			if (t >= 0 && t <= 1) {
@@ -4964,7 +4964,7 @@ statics: {
 	}
 
 }),
-new function() { 
+new function() {
 
 	function getLengthIntegrand(v) {
 		var p1x = v[0], p1y = v[1],
@@ -5000,8 +5000,8 @@ new function() {
 			if (b === undefined)
 				b = 1;
 			if (v[0] == v[2] && v[1] == v[3] && v[6] == v[4] && v[7] == v[5]) {
-				var dx = v[6] - v[0], 
-					dy = v[7] - v[1]; 
+				var dx = v[6] - v[0],
+					dy = v[7] - v[1];
 				return (b - a) * Math.sqrt(dx * dx + dy * dy);
 			}
 			var ds = getLengthIntegrand(v);
@@ -5031,11 +5031,11 @@ new function() {
 				return length - offset;
 			}
 			return Numerical.findRoot(f, ds,
-					forward ? a + guess : b - guess, 
+					forward ? a + guess : b - guess,
 					a, b, 16, 0.00001);
 		}
 	};
-}, new function() { 
+}, new function() {
 	function addLocation(locations, curve1, t1, point1, curve2, t2, point2) {
 		var first = locations[0],
 			last = locations[locations.length - 1];
@@ -5430,7 +5430,7 @@ var PathItem = Item.extend({
 			coords,
 			relative = false,
 			control,
-			current = new Point(); 
+			current = new Point();
 
 		function getCoord(index, coord, update) {
 			var val = parseFloat(coords[index]);
@@ -5779,7 +5779,7 @@ var Path = PathItem.extend({
 		to = Base.pick(to, this._segments.length);
 		var segments = this._segments,
 			curves = this._curves,
-			count = segments.length, 
+			count = segments.length,
 			removed = segments.splice(from, to - from),
 			amount = removed.length;
 		if (!amount)
@@ -6006,7 +6006,7 @@ var Path = PathItem.extend({
 		var curves = this.getCurves(),
 			length = 0;
 		if (isParameter) {
-			var index = ~~offset; 
+			var index = ~~offset;
 			return curves[index].getLocationAt(offset - index, true);
 		}
 		for (var i = 0, l = curves.length; i < l; i++) {
@@ -6152,7 +6152,7 @@ var Path = PathItem.extend({
 				area = [];
 				if (closed || segment._index > 0
 						&& segment._index < segments.length - 1) {
-					if (join !== 'round' && (segment._handleIn.isZero() 
+					if (join !== 'round' && (segment._handleIn.isZero()
 							|| segment._handleOut.isZero()))
 						Path._addSquareJoin(segment, join, radius, miterLimit,
 								addAreaPoint, true);
@@ -6204,7 +6204,7 @@ var Path = PathItem.extend({
 					: null;
 	}
 
-}, new function() { 
+}, new function() {
 
 	function drawHandles(ctx, segments, matrix, size) {
 		var half = size / 2;
@@ -6355,12 +6355,12 @@ var Path = PathItem.extend({
 					this._project.options.handleSize || 4);
 		}
 	};
-}, new function() { 
+}, new function() {
 
 	function getFirstControlPoints(rhs) {
 		var n = rhs.length,
-			x = [], 
-			tmp = [], 
+			x = [],
+			tmp = [],
 			b = 2;
 		x[0] = rhs[0] / b;
 		for (var i = 1; i < n; i++) {
@@ -6452,7 +6452,7 @@ var Path = PathItem.extend({
 			}
 		}
 	};
-}, new function() { 
+}, new function() {
 	function getCurrentSegment(that) {
 		var segments = that._segments;
 		if (segments.length == 0)
@@ -6599,7 +6599,7 @@ var Path = PathItem.extend({
 			this.setClosed(true);
 		}
 	};
-}, {  
+}, {
 
 	_getBounds: function(getter, matrix) {
 		return Path[getter](this._segments, this._closed, this.getStyle(),
@@ -6639,18 +6639,18 @@ statics: {
 			return new Rectangle();
 		var coords = new Array(6),
 			prevCoords = first._transformCoordinates(matrix, new Array(6), false),
-			min = prevCoords.slice(0, 2), 
-			max = min.slice(), 
+			min = prevCoords.slice(0, 2),
+			max = min.slice(),
 			roots = new Array(2);
 
 		function processSegment(segment) {
 			segment._transformCoordinates(matrix, coords, false);
 			for (var i = 0; i < 2; i++) {
 				Curve._addBounds(
-					prevCoords[i], 
-					prevCoords[i + 4], 
-					coords[i + 2], 
-					coords[i], 
+					prevCoords[i],
+					prevCoords[i + 4],
+					coords[i + 2],
+					coords[i],
 					i, strokePadding ? strokePadding[i] : 0, min, max, roots);
 			}
 			var tmp = prevCoords;
@@ -6717,7 +6717,7 @@ statics: {
 				break;
 			case 'butt':
 			case 'square':
-				Path._addSquareCap(segment, cap, radius, add); 
+				Path._addSquareCap(segment, cap, radius, add);
 				break;
 			}
 		}
@@ -6834,7 +6834,7 @@ Path.inject({ statics: new function() {
 
 	function createRectangle() {
 		var rect = Rectangle.readNamed(arguments, 'rectangle'),
-			radius = Size.readNamed(arguments, 'radius', 0, 0, true), 
+			radius = Size.readNamed(arguments, 'radius', 0, 0, true),
 			bl = rect.getBottomLeft(true),
 			tl = rect.getTopLeft(true),
 			tr = rect.getTopRight(true),
@@ -6849,7 +6849,7 @@ Path.inject({ statics: new function() {
 			]);
 		} else {
 			radius = Size.min(radius, rect.getSize(true).divide(2));
-			var h = radius.multiply(kappa * 2); 
+			var h = radius.multiply(kappa * 2);
 			path._add([
 				new Segment(bl.add(radius.width, 0), null, [-h.width, 0]),
 				new Segment(bl.subtract(0, radius.height), [0, h.height], null),
@@ -7104,7 +7104,7 @@ var CompoundPath = PathItem.extend({
 				ctx.stroke();
 		}
 	}
-}, new function() { 
+}, new function() {
 	function getCurrentPath(that) {
 		if (!that._children.length)
 			throw new Error('Use a moveTo() command first');
@@ -7141,9 +7141,9 @@ var CompoundPath = PathItem.extend({
 
 var PathFlattener = Base.extend({
 	initialize: function(path) {
-		this.curves = []; 
-		this.parts = []; 
-		this.length = 0; 
+		this.curves = [];
+		this.parts = [];
+		this.length = 0;
 		this.index = 0;
 
 		var segments = path._segments,
@@ -7410,7 +7410,7 @@ var PathFitter = Base.extend({
 		for (var i = first + 1; i < last; i++) {
 			var P = this.evaluate(3, curve, u[i - first]);
 			var v = P.subtract(this.points[i]);
-			var dist = v.x * v.x + v.y * v.y; 
+			var dist = v.x * v.x + v.y * v.y;
 			if (dist >= maxDist) {
 				maxDist = dist;
 				index = i;
@@ -7708,7 +7708,7 @@ var Color = Base.extend(new function() {
 		gradient: ['gradient', 'origin', 'destination', 'highlight']
 	};
 
-	var parsers = {}, 
+	var parsers = {},
 		colorCache = {},
 		colorCtx;
 
@@ -7746,12 +7746,12 @@ var Color = Base.extend(new function() {
 	}
 
 	var hsbIndices = [
-		[0, 3, 1], 
-		[2, 0, 1], 
-		[1, 0, 3], 
-		[1, 2, 0], 
-		[3, 1, 0], 
-		[0, 1, 2]  
+		[0, 3, 1],
+		[2, 0, 1],
+		[1, 0, 3],
+		[1, 2, 0],
+		[3, 1, 0],
+		[0, 1, 2]
 	];
 
 	var converters = {
@@ -7762,20 +7762,20 @@ var Color = Base.extend(new function() {
 				h = delta === 0 ? 0
 					:   ( max == r ? (g - b) / delta + (g < b ? 6 : 0)
 						: max == g ? (b - r) / delta + 2
-						:            (r - g) / delta + 4) * 60; 
+						:            (r - g) / delta + 4) * 60;
 			return [h, max === 0 ? 0 : delta / max, max];
 		},
 
 		'hsb-rgb': function(h, s, b) {
-			var h = (h / 60) % 6, 
-				i = Math.floor(h), 
+			var h = (h / 60) % 6,
+				i = Math.floor(h),
 				f = h - i,
 				i = hsbIndices[i],
 				v = [
-					b,						
-					b * (1 - s),			
-					b * (1 - s * f),		
-					b * (1 - s * (1 - f))	
+					b,
+					b * (1 - s),
+					b * (1 - s * f),
+					b * (1 - s * (1 - f))
 				];
 			return [v[i[0]], v[i[1]], v[i[2]]];
 		},
@@ -7788,7 +7788,7 @@ var Color = Base.extend(new function() {
 				h = achromatic ? 0
 					:   ( max == r ? (g - b) / delta + (g < b ? 6 : 0)
 						: max == g ? (b - r) / delta + 2
-						:            (r - g) / delta + 4) * 60, 
+						:            (r - g) / delta + 4) * 60,
 				l = (max + min) / 2,
 				s = achromatic ? 0 : l < 0.5
 						? delta / (max + min)
@@ -7855,7 +7855,7 @@ var Color = Base.extend(new function() {
 						var current = this._components[0];
 						value = Gradient.read(
 								Array.isArray(value) ? value : arguments,
-								0, 0, true); 
+								0, 0, true);
 						if (current !== value) {
 							if (current)
 								current._removeOwner(this);
@@ -7923,7 +7923,7 @@ var Color = Base.extend(new function() {
 					alpha = args[2];
 				} else {
 					if (this._read)
-						read = 1; 
+						read = 1;
 					args = slice.call(args, 1);
 					argType = typeof arg;
 				}
@@ -8252,7 +8252,7 @@ var Gradient = Base.extend({
 		if (stops.length < 2)
 			throw new Error(
 					'Gradient stop list needs to contain at least two stops.');
-		this._stops = GradientStop.readAll(stops, 0, false, true); 
+		this._stops = GradientStop.readAll(stops, 0, false, true);
 		for (var i = 0, l = this._stops.length; i < l; i++) {
 			var stop = this._stops[i];
 			stop._owner = this;
@@ -8308,7 +8308,7 @@ var GradientStop = Base.extend({
 	},
 
 	_serialize: function(options, dictionary) {
-		return Base.serialize([this._color, this._rampPoint], options, true, 
+		return Base.serialize([this._color, this._rampPoint], options, true,
 				dictionary);
 	},
 
@@ -8379,7 +8379,7 @@ var Style = Base.extend(new function() {
 		fields = {
 			_defaults: defaults,
 			_textDefaults: Base.merge(defaults, {
-				fillColor: new Color() 
+				fillColor: new Color()
 			})
 		};
 
@@ -8425,7 +8425,7 @@ var Style = Base.extend(new function() {
 					this._values[key] = value;
 				} else if (isColor && !(value && value.constructor === Color)) {
 					this._values[key] = value = Color.read(
-							[value], 0, 0, true, true); 
+							[value], 0, 0, true, true);
 					if (value)
 						value._owner = this._item;
 				}
@@ -8633,7 +8633,7 @@ var DomElement = new function() {
 			var doc = el.ownerDocument,
 				view = doc.defaultView,
 				html = doc.documentElement;
-			return new Rectangle(0, 0, 
+			return new Rectangle(0, 0,
 				view.innerWidth || html.clientWidth,
 				view.innerHeight || html.clientHeight
 			);
@@ -8953,7 +8953,7 @@ var View = Base.extend(Callback, {
 		this._element.width = size.width;
 		this._element.height = size.height;
 		this._viewSize.set(size.width, size.height, true);
-		this._bounds = null; 
+		this._bounds = null;
 		this.fire('resize', {
 			size: size,
 			delta: delta
@@ -9155,7 +9155,7 @@ var CanvasView = View.extend({
 		this._project._needsRedraw = false;
 		return true;
 	}
-}, new function() { 
+}, new function() {
 
 	var downPoint,
 		lastPoint,
@@ -9310,8 +9310,8 @@ var Key = new function() {
 		40: 'down',
 		46: 'delete',
 		91: 'command',
-		93: 'command', 
-		224: 'command'  
+		93: 'command',
+		224: 'command'
 	},
 
 	modifiers = Base.merge({
@@ -9323,9 +9323,9 @@ var Key = new function() {
 		space: false
 	}),
 
-	charCodeMap = {}, 
-	keyMap = {}, 
-	downCode; 
+	charCodeMap = {},
+	keyMap = {},
+	downCode;
 
 	function handleKey(down, keyCode, charCode, event) {
 		var character = String.fromCharCode(charCode),
@@ -9713,7 +9713,7 @@ var ToolEvent = Event.extend({
 
 var Tool = PaperScopeItem.extend({
 	_list: 'tools',
-	_reference: '_tool', 
+	_reference: '_tool',
 	_events: [ 'onActivate', 'onDeactivate', 'onEditOptions',
 			'onMouseDown', 'onMouseUp', 'onMouseDrag', 'onMouseMove',
 			'onKeyDown', 'onKeyUp' ],
@@ -9903,9 +9903,9 @@ var BlendMode = new function() {
 	var min = Math.min,
 		max = Math.max,
 		abs = Math.abs,
-		sr, sg, sb, sa, 
-		br, bg, bb, ba, 
-		dr, dg, db;     
+		sr, sg, sb, sa,
+		br, bg, bb, ba,
+		dr, dg, db;
 
 	function getLum(r, g, b) {
 		return 0.2989 * r + 0.587 * g + 0.114 * b;
@@ -9940,9 +9940,9 @@ var BlendMode = new function() {
 
 	function setSat(r, g, b, s) {
 		var col = [r, g, b],
-			mx = max(r, g, b), 
-			mn = min(r, g, b), 
-			md; 
+			mx = max(r, g, b),
+			mn = min(r, g, b),
+			md;
 		mn = mn === r ? 0 : mn === g ? 1 : 2;
 		mx = mx === r ? 0 : mx === g ? 1 : 2;
 		md = min(mn, mx) === 0 ? max(mn, mx) === 1 ? 2 : 1 : 0;
@@ -10100,7 +10100,7 @@ var BlendMode = new function() {
 			if (!normal)
 				dstContext.globalCompositeOperation = blendMode;
 			dstContext.drawImage(srcCanvas, offset.x, offset.y);
-			dstContext.restore();	
+			dstContext.restore();
 		} else {
 			var process = modes[blendMode];
 			if (!process)
@@ -10291,7 +10291,7 @@ new function() {
 						- getDistance(segments, 1, 3))
 						? 'circle'
 						: 'ellipse';
-			} 
+			}
 		}
 		return 'path';
 	}
@@ -10369,8 +10369,8 @@ new function() {
 				height = getDistance(segments, 0, 3),
 				rx = (width - getDistance(segments, 0, 7)) / 2,
 				ry = (height - getDistance(segments, 1, 2)) / 2,
-				left = segments[3]._point, 
-				right = segments[4]._point, 
+				left = segments[3]._point,
+				right = segments[4]._point,
 				point = left.subtract(right.subtract(left).normalize(rx))
 						.rotate(-angle, center);
 			attrs = {
@@ -10553,7 +10553,7 @@ new function() {
 		if (item._visibility != null && !item._visibility)
 			attrs.visibility = 'hidden';
 
-		delete item._gradientMatrix; 
+		delete item._gradientMatrix;
 		return setAttributes(node, attrs);
 	}
 
