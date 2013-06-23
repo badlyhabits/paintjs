@@ -1,3 +1,11 @@
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
 html {
   font-size: 100%;
   -ms-text-size-adjust: 100%;
@@ -7,12 +15,55 @@ html {
 body {
   margin: 0;
   background: #f6f6f6;
-  font: 400 1em arial, sans-serif;
+  font: 400 10px arial, sans-serif;
+}
+
+h1 {
+  margin: 0 0 5px;
+  font-size: 14px;
 }
 
 canvas {
   display: block;
+  clear: both;
 }
 canvas:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3) inset;
+}
+
+menu {
+  margin: 0;
+  padding: 10px 20px 15px;
+}
+
+button {
+  position: relative;
+  margin: 0 6px 0 0;
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 2px;
+  color: #fff;
+  background: #cb3b27;
+  border: solid 1px #d94e3b;
+  text-align: center;
+  box-shadow: 0px 5px 0px #84261a;
+  font: 400 9px arial, sans-serif;
+  text-transform: uppercase;
+  transition: all 100ms ease;
+}
+button:hover {
+  background: #cb0a0a;
+}
+button:active, button.btn-active {
+  -webkit-transform: translate3d(0, 3px, 0);
+  transform: translate3d(0, 3px, 0);
+  box-shadow: 0px 2px 0px #84261a;
+}
+
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
 }

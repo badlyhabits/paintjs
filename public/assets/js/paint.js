@@ -1,60 +1,92 @@
 paper.install(window);
 
-var paint = document.getElementById("paint");
+;(function() {
+
+  var $btns = $("#js-tools-menu").find("button"),
+      btnActiveClass = "btn-active";
+
+  function btnClicked(e) {
+    var $that = $(this);
+    $btns.removeClass(btnActiveClass)
+    $that.addClass(btnActiveClass).data("tool").activate();
+  }
+
+  function closePath(e) {
+    path.closed = true;
+  }
+
+  function zoomInPaper(e) {
+    var zoom = paper.view.getZoom();
+    paper.view.setZoom(zoom + 1);
+  }
+
+  function zoomOutPaper(e) {
+    var zoom = paper.view.getZoom();
+    if (zoom > 1) {
+      paper.view.setZoom(zoom - 1);
+    }
+  }
+
+  $btns.on("click", btnClicked);
+
+  $("#btn-close-path").on("click", closePath);
+  $("#btn-paper-zoom-in").on("click", zoomInPaper);
+  $("#btn-paper-zoom-out").on("click", zoomOutPaper);
+
+})();
+
+
+var paint = $("#paint")[0];
 paper.setup(paint);
+paper.view.setZoom(1);
 
-var penTool, arcTool, rectTool;
-var path;
+var path = new Path();
 
-function onMouseDown(event) {
-  path = new Path();
-  path.strokeColor = "black";
-  path.add(event.point);
+var tools = {
+  pencil: { },
+  rect: { },
+  circle: { },
+  arc: { }
+};
+
+for (var t in tools) {
+  tools[t] = new Tool();
+  tools[t]._name = t;
+  tools[t]._btnId = "btn-" + t;
+  $("#" + tools[t]._btnId).data("tool", tools[t]);
 }
 
-function onMouseDragPoint(event) {
-  path.add(event.point);
-}
+var strColor = "black";
 
-function onMouseDragArc(event) {
-  path.arcTo(event.point);
-}
+tools.pencil.methods = {
+  // m === mouse
+  m_down: function(event) {
+    path = new Path();
+    path.strokeColor = strColor;
+    path.add(event.point);
+  },
+  m_drag: function(event) {
+    path.add(event.point);
+  }
+};
 
-function onMouseDragRect(event) {
+tools.arc.methods = {
+  m_down: function(event) {
+    path = new Path();
+    path.strokeColor = strColor;
+    path.add(event.point);
+  },
+  m_drag: function(event) {
+    path.arcTo(event.point);
+  }
+};
 
-}
-
-function onMouseUpRect(event) {
-  var rect = new Rectangle({ x: 10, y: 20, width: 100, height: 200 });
-  rect.size = [200, 300];
-  console.log(rect);
-}
-
-// function onFrame(event) {
-//   path.rotate(1);
-// }
-
-penTool = new Tool();
-penTool.onMouseDown = onMouseDown;
-penTool.onMouseDrag = onMouseDragPoint;
-
-arcTool = new Tool();
-arcTool.minDistance = 20;
-arcTool.onMouseDown = onMouseDown;
-arcTool.onMouseDrag = onMouseDragArc;
-
-rectTool = new Tool();
-rectTool.onMouseDown = onMouseDown;
-rectTool.onMouseDrag = onMouseDragRect;
-rectTool.onMouseUp   = onMouseUpRect;
-
-var btnLine = document.getElementById("btn-line");
-var btnArc  = document.getElementById("btn-arc");
-var btnRect = document.getElementById("btn-rect");
-
-btnLine.addEventListener("click", function(e) { penTool.activate(); });
-btnRect.addEventListener("click", function(e) { rectTool.activate(); });
-btnArc.addEventListener("click", function(e) { arcTool.activate(); });
+// pencil
+tools.pencil.onMouseDown = tools.pencil.methods.m_down;
+tools.pencil.onMouseDrag = tools.pencil.methods.m_drag;
+tools.pencil.onMouseUp = tools.pencil.methods.m_up;
 
 
+tools.arc.onMouseDown = tools.arc.methods.m_down;
+tools.arc.onMouseDrag = tools.arc.methods.m_drag;
 
