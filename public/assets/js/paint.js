@@ -1,64 +1,18 @@
-// ;(function(window, document, paper, $, undefined) {
+// ;(function(window, document, paper, undefined) {
 
   paper.install(window);
   paper.setup("paint");
   paper.view.setZoom(1);
 
-  var $toolsMenuButtons = $("#tools-menu").find("button"),
+  var toolbar = document.getElementById("tools-menu"),
+      toolbarBtns = toolbar.getElementsByTagName("button"),
       btnActiveClass = "btn-active",
-      $btnZoomIn = $("#btn-zoom-in"),
-      $btnZoomOut = $("#btn-zoom-out"),
-      $btnClosePath = $("#btn-close-path");
+      activeButtons = document.getElementsByClassName(btnActiveClass),
+      btnZoomIn = document.getElementById("btn-zoom-in"),
+      btnZoomOut = document.getElementById("btn-zoom-out"),
+      btnClosePath = document.getElementById("btn-close-path"),
 
-
-  /***************  Menu Tools / Helpers  ***************/
-  function btnClicked(e) {
-    var $that = $(this);
-    $toolsMenuButtons.removeClass(btnActiveClass);
-    $that.addClass(btnActiveClass).data("tool").activate();
-  }
-
-  function closePath(e) {
-    if (_path.closed === true) return;
-    _path.closed = true;
-    console.log("path closed");
-  }
-
-  function setBtnZoomText() {
-    var zoom = paper.view.getZoom();
-    if (zoom === 1) {
-      $btnZoomIn.text("+");
-    }
-    else {
-      $btnZoomIn.text("+ " + zoom);
-    }
-  }
-
-  function zoomInPaper(e) {
-    paper.view.setZoom(paper.view.getZoom() + 1);
-    setBtnZoomText();
-  }
-
-  function zoomOutPaper(e) {
-    if (paper.view.getZoom() <= 1) return;
-    paper.view.setZoom(paper.view.getZoom() - 1);
-    setBtnZoomText();
-  }
-
-
-  /*************** Menu Tools / Helpers / Events  ***************/
-  $toolsMenuButtons.on("click", btnClicked);
-
-  $btnClosePath.on("click", closePath);
-  $btnZoomIn.on("click.zoom-in", zoomInPaper);
-  $btnZoomOut.on("click.zoom-out", zoomOutPaper);
-
-
-
-  /*************** PaintJS Tools  ***************/
-  /*************** PaintJS Tools  ***************/
-
-  var _path  = new Path(),
+      _path  = new Path(),
       _point = new Point(),
       _rect  = new Rectangle(),
 
@@ -76,11 +30,58 @@
 
       tls;
 
+  /***************  Menu Tools / Helpers  ***************/
+  function activateTool(e) {
+    var that = this;
+    for (var i = 0; i < activeButtons.length; i++) {
+      activeButtons[i].classList.remove(btnActiveClass);
+    }
+    that.classList.add(btnActiveClass);
+    tools[that.dataset.tool].activate();
+  }
 
+  function closePath(e) {
+    if (_path.closed === true) return;
+    _path.closed = true;
+    console.log("_path closed");
+  }
+
+  function setBtnZoomText() {
+    var zoom = paper.view.getZoom();
+    if (zoom === 1) {
+      btnZoomIn.innerText = "+";
+    }
+    else {
+     btnZoomIn.innerText = "+ " + zoom;
+    }
+  }
+
+  function zoomInPaper(e) {
+    paper.view.setZoom(paper.view.getZoom() + 1);
+    setBtnZoomText();
+  }
+
+  function zoomOutPaper(e) {
+    if (paper.view.getZoom() <= 1) return;
+    paper.view.setZoom(paper.view.getZoom() - 1);
+    setBtnZoomText();
+  }
+
+
+  /*************** Menu Tools / Helpers / Events  ***************/
+  for (var i = 0; i < toolbarBtns.length; i++) {
+    toolbarBtns[i].addEventListener("click", activateTool, false);
+  }
+
+  btnClosePath.addEventListener("click", closePath, false);
+  btnZoomIn.addEventListener("click", zoomInPaper, false);
+  btnZoomOut.addEventListener("click", zoomOutPaper, false);
+
+
+  /*************** PaintJS Tools  ***************/
+  /*************** PaintJS Tools  ***************/
   for (var t in tools) {
     tools[t] = new Tool();
-    tools[t]._btnId = "btn-" + t;
-    $("#" + tools[t]._btnId).data("tool", tools[t]);
   }
 
   window.tls = tls = tools;
@@ -121,16 +122,43 @@
   }
 
   /***************  Circle  ***************/
-  tls.circle.onMouseUp = function(event) {
+  // tls.circle.onMouseUp = function(event) {
+  //   var circle = new Path.Circle({
+  //     center: event.middlePoint,
+  //     radius: event.delta.length / 2,
+  //     strokeColor: "#efefaa",
+  //     fillColor: "#fff"
+  //   });
+  //   // debugger;
+  // };
+
+  // tls.circle.onMouseDrag = function(event) {
+
+  //   var circle = new Path.Circle({
+  //     center: event.middlePoint,
+  //     radius: event.delta.length / 2,
+  //     strokeColor: "#efefaa",
+  //     fillColor: "#fff"
+  //   });
+  //   // circle.remove();
+  // }
+  tls.circle.on("mouseup", function(event) {
     var circle = new Path.Circle({
       center: event.middlePoint,
       radius: event.delta.length / 2,
       strokeColor: "#efefaa",
       fillColor: "#fff"
-    })
+    });
+  });
 
-  };
-
+  tls.circle.on("mousedrag", function(event) {
+    var circle = new Path.Circle({
+      center: event.middlePoint,
+      radius: event.delta.length / 2,
+      strokeColor: "#efefaa",
+      fillColor: "#fff"
+    });
+  });
 
   /***************  Arc  ***************/
   tls.arc.onMouseDown = function(event) {
@@ -144,7 +172,7 @@
     // _path = new Path();
   }
 
-// })(window, document, paper, jQuery);
+// })(window, document, paper);
 
 var y = view.size.height / 2;
 var width = view.size.width;
