@@ -26,6 +26,7 @@ h1 {
 canvas {
   display: block;
   clear: both;
+  transition: box-shadow 300ms ease-in-out;
 }
 canvas:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3) inset;
