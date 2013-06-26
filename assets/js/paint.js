@@ -1,44 +1,157 @@
 // ;(function(window, document, paper, undefined) {
 
-  paper.install(window);
-  paper.setup("paint");
-  paper.view.setZoom(1);
+  function extend(destination, source) {
+    for (var k in source) {
+      if (source.hasOwnProperty(k)) {
+        destination[k] = source[k];
+      }
+    }
+    return destination;
+  }
 
-  var toolbar = document.getElementById("tools-menu"),
-      toolbarBtns = toolbar.getElementsByTagName("button"),
-      btnActiveClass = "btn-active",
-      activeButtons = document.getElementsByClassName(btnActiveClass),
-      btnZoomIn = document.getElementById("btn-zoom-in"),
-      btnZoomOut = document.getElementById("btn-zoom-out"),
-      btnClosePath = document.getElementById("btn-close-path"),
+  function qs(selector) {
+    return document.querySelector(selector);
+  }
 
-      _path  = new Path(),
-      _point = new Point(),
-      _rect  = new Rectangle(),
+  // var toolbar         = document.getElementById("toolbar"),
+  //     toolbarBtns     = toolbar.getElementsByTagName("button"),
+  //     btnZoomIn       = document.getElementById("btn-zoom-in"),
+  //     btnZoomOut      = document.getElementById("btn-zoom-out"),
+  //     btnClosePath    = document.getElementById("btn-close-path"),
+  //     btnActiveClass  = "btn-active",
+  //     activeButtons   = document.getElementsByClassName(btnActiveClass),
 
-      opts  = {
-        strColor: "black"
-      },
+  //     Path      = paper.Path,
+  //     Point     = paper.Point,
+  //     Rectangle = paper.Rectangle,
+  //     Tool      = paper.Tool,
+  //     Size      = paper.Size,
+  //     view      = paper.view,
 
-      tools = {
-        line: { },
-        pencil: { },
-        rect: { },
-        circle: { },
-        arc: { }
-      },
+  //     // _path  = new Path(),
+  //     // _point = new Point(),
+  //     // _rect  = new Rectangle(),
 
-      tls;
+  //     opts = {
+  //       strColor: "black"
+  //     },
+
+  //     tools = {
+  //       empty  : null,
+  //       line   : { },
+  //       pencil : { },
+  //       brush  : { },
+  //       rect   : { },
+  //       circle : { },
+  //       arc    : { }
+  //     };
+
+  var ToolFactory = function() {
+
+  };
+
+  var Paint = function (options) {
+    var me = this;
+    me.options = {};
+    extend(me.options, Paint.defaults);
+    extend(me.options, options);
+    me.tools = me.options.tools || [];
+    return me;
+  };
+
+  Paint.defaults = {
+    canvas: null,
+    tools: null,
+    toolbar: null,
+    tool_active_class: "btn-active",
+    zoom: 1,
+  };
+
+  Paint.prototype = {
+
+    init: function() {
+      var me = this, opts = me.options;
+      console.log(opts);
+      paper.setup(opts.canvas);
+      paper.view.setZoom(opts.zoom);
+      return me;
+    },
+
+    set_toolbar: function(toolbar) {
+      var me = this,
+          opts = me.options,
+          toolbar = toolbar || qs(opts.toolbar);
+
+      opts.toolbar = toolbar;
+      var btns = opts.toolbar.btns = me.get_toolbar_elems(toolbar, "button");
+
+      for (var i = 0, len = btns.length; i < len; i++) {
+        btns[i].addEventListener("click", function(e) {
+          for (var j = 0; j < len; j++) {
+            btns[j].classList.remove(opts.tool_active_class);
+          }
+          this.classList.add(opts.tool_active_class);
+        }, false);
+      }
+    },
+
+    get_toolbar: function() {
+      return qs(this.options.toolbar);
+    },
+
+    get_toolbar_elems: function(toolbar, elem) {
+      return toolbar.querySelectorAll(elem);
+    },
+
+    activate_tool: function(tool) {
+      console.log(tool);
+    },
+
+    deactivate_tool: function(tool) {
+
+    },
+    save_image: function() {},
+    clear_canvas: function() {},
+    zoom_in: function() {},
+    zoom_out: function() {}
+  };
+
+  var options = {
+    canvas: "paint",
+    tools: "empty / line / pencil / brush / rect / circle / arc",
+    toolbar: "#toolbar",
+    zoom : 1
+  };
+
+  var paint = new Paint(options);
+  paint.init().set_toolbar();
+
+  // var paint2 = new Paint();
+  // paint2.init().set_toolbar(qs("#test"));
+
+  // toolList = "empty line pencil brush rect circle arc".split(" ");
+  // for (var t in toolList) {
+  //   var name = toolList[t];
+  //   toolList[t] = new Tool();
+  //   toolList[t]._name = name;
+  //   toolList[name.toString()] = toolList[t];
+  //   toolList[t].setOnActivate(function(event) {
+  //     console.log(event, "ACTIVATED");
+  //   });
+  // }
 
   /***************  Menu Tools / Helpers  ***************/
-  function activateTool(e) {
+  function activateTool(e, tool) {
     var that = this;
+    console.log(this);
     for (var i = 0; i < activeButtons.length; i++) {
       activeButtons[i].classList.remove(btnActiveClass);
     }
     that.classList.add(btnActiveClass);
     tools[that.dataset.tool].activate();
+    console.log(activateTool.name + ": " + that.dataset.tool);
   }
+
 
   function closePath(e) {
     if (_path.closed === true) return;
@@ -48,12 +161,7 @@
 
   function setBtnZoomText() {
     var zoom = paper.view.getZoom();
-    if (zoom === 1) {
-      btnZoomIn.innerText = "+";
-    }
-    else {
-     btnZoomIn.innerText = "+ " + zoom;
-    }
+    zoom === 1 ? btnZoomIn.innerText = "+" : btnZoomIn.innerText = "+ " + zoom;
   }
 
   function zoomInPaper(e) {
@@ -69,204 +177,100 @@
 
 
   /*************** Menu Tools / Helpers / Events  ***************/
-  for (var i = 0; i < toolbarBtns.length; i++) {
-    toolbarBtns[i].addEventListener("click", activateTool, false);
-  }
+  // for (var i = 0; i < toolbarBtns.length; i++) {
+  //   toolbarBtns[i].addEventListener("click", activateTool, false);
+  // }
 
-  btnClosePath.addEventListener("click", closePath, false);
-  btnZoomIn.addEventListener("click", zoomInPaper, false);
-  btnZoomOut.addEventListener("click", zoomOutPaper, false);
+  // btnClosePath.addEventListener("click", closePath, false);
+  // btnZoomIn.addEventListener("click", zoomInPaper, false);
+  // btnZoomOut.addEventListener("click", zoomOutPaper, false);
 
 
   /*************** PaintJS Tools  ***************/
   /*************** PaintJS Tools  ***************/
-  for (var t in tools) {
-    tools[t] = new Tool();
-  }
-
-  window.tls = tls = tools;
+  // var i = 0;
+  // for (var t in tools) {
+  //   tools[t] = new Tool();
+  //   tools[t]._name = t;
+  //   // console.log(i++ + ": ", t, tools[t]);
+  //   tools[t].setOnActivate(function(event) {
+  //     console.log(event, "ACTIVATED");
+  //   });
+  // }
 
   /***************  Line  ***************/
 
-  tls.line.onMouseDown = function(event) {
-    if (_path) {
-      _path.selected = false;
-    }
 
-    _path = new Path({
-      segments: [event.point],
-      strokeColor : opts.strColor,
-      fullySelected: true
-    });
-  };
+  // tools.line.onMouseDown = function(event) {
+  //   if (_path) {
+  //     _path.selected = false;
+  //   }
 
-  tls.line.onMouseDrag = function(event) {
-    _path.add(event.point);
-  };
-
-  tls.line.onMouseUp = function(element) {
-    _path.smooth();
-    _path.simplify(10)
-    _path.fullySelected = false;
-  }
-
-  /***************  Pencil  ***************/
-  tls.pencil.onMouseDown = function(event) {
-    _path = new Path();
-    _path.strokeColor = opts.strColor;
-    _path.add(event.point);
-  }
-
-  tls.pencil.onMouseDrag = function(event) {
-    _path.add(event.point);
-  }
-
-  /***************  Circle  ***************/
-  // tls.circle.onMouseUp = function(event) {
-  //   var circle = new Path.Circle({
-  //     center: event.middlePoint,
-  //     radius: event.delta.length / 2,
-  //     strokeColor: "#efefaa",
-  //     fillColor: "#fff"
+  //   _path = new Path({
+  //     segments: [event.point],
+  //     strokeColor : opts.strColor,
+  //     fullySelected: true
   //   });
-  //   // debugger;
   // };
 
-  // tls.circle.onMouseDrag = function(event) {
+  // tools.line.onMouseDrag = function(event) {
+  //   _path.add(event.point);
+  // };
 
+  // tools.line.onMouseUp = function(element) {
+  //   _path.smooth();
+  //   _path.simplify(10)
+  //   _path.fullySelected = false;
+  // }
+
+
+  // /***************  Pencil  ***************/
+  // tools.pencil.onMouseDown = function(event) {
+  //   _path = new Path();
+  //   _path.strokeColor = opts.strColor;
+  //   _path.add(event.point);
+  // }
+
+  // tools.pencil.onMouseDrag = function(event) {
+  //   _path.add(event.point);
+  // }
+
+
+  // /***************  Circle  ***************/
+  // tools.circle.on("mouseup", function(event) {
   //   var circle = new Path.Circle({
   //     center: event.middlePoint,
   //     radius: event.delta.length / 2,
   //     strokeColor: "#efefaa",
   //     fillColor: "#fff"
   //   });
-  //   // circle.remove();
+  // });
+
+  // tools.circle.on("mousedrag", function(event) {
+  //   var circle = new Path.Circle({
+  //     center: event.middlePoint,
+  //     radius: event.delta.length / 2,
+  //     strokeColor: "#efefaa",
+  //     fillColor: "#fff"
+  //   });
+  // });
+
+
+  // /***************  Arc  ***************/
+  // tools.arc.onMouseDown = function(event) {
+  //   path = new Path();
+  //   _path.strokeColor = opts.strColor;
+  //   _path.add(event.point);
   // }
-  tls.circle.on("mouseup", function(event) {
-    var circle = new Path.Circle({
-      center: event.middlePoint,
-      radius: event.delta.length / 2,
-      strokeColor: "#efefaa",
-      fillColor: "#fff"
-    });
-  });
 
-  tls.circle.on("mousedrag", function(event) {
-    var circle = new Path.Circle({
-      center: event.middlePoint,
-      radius: event.delta.length / 2,
-      strokeColor: "#efefaa",
-      fillColor: "#fff"
-    });
-  });
+  // tools.arc.onMouseDrag = function(event) {
+  //   _path.arcTo(event.point);
+  //   // _path = new Path();
+  // }
 
-  /***************  Arc  ***************/
-  tls.arc.onMouseDown = function(event) {
-    path = new Path();
-    _path.strokeColor = opts.strColor;
-    _path.add(event.point);
-  }
-
-  tls.arc.onMouseDrag = function(event) {
-    _path.arcTo(event.point);
-    // _path = new Path();
-  }
+  // // disable first tool activated by default
+  // tools.empty.active = false;
+  // tools.empty.remove();
 
 // })(window, document, paper);
 
-var y = view.size.height / 2;
-var width = view.size.width;
-var vector = new Point({
-    angle: 45,
-    length: width / 5
-});
-var offset = width / 30;
-var handleTexts = [];
-var path = new Path();
-path.segments = [
-    [[offset, y], null, vector.rotate(-90)],
-    [[width / 2, y], vector.rotate(-180), vector],
-    [[width - offset, y], vector.rotate(90), null]
-];
-
-path.strokeColor = "red";
-path.fullySelected = false;
-
-
-// var myPath = new Path();
-// myPath.strokeColor = 'black';
-// myPath.add(new Point(0, 0), new Point(100, 50));
-
-// insert a segment between the two existing
-// segments in the path:
-// myPath.insert(1, new Point(30, 40));
-
-
-// var path = new Path();
-// path.strokeColor = 'black';
-// path.add(new Point(30, 75));
-// path.add(new Point(30, 25));
-// path.add(new Point(80, 25));
-// path.add(new Point(80, 75));
-// path.closed = true;
-
-// // Select the path, so we can see its handles:
-// path.fullySelected = true;
-
-// // Create a copy of the path and move it 100pt to the right:
-// var copy = path.clone();
-// copy.fullySelected = true;
-// copy.position.x += 100;
-
-// // Smooth the segments of the copy:
-// copy.smooth();
-
-// var pathRect = new Path.Rectangle({
-//   center: [200, 200],
-//   size: [100, 100]
-// });
-
-// pathRect.strokeColor = "red";
-// pathRect.strokeWidth = 2;
-// pathRect.closed = true;
-
-// pathRectCopy = pathRect.clone();
-// pathRectCopy.fullySelected = true;
-// pathRectCopy.position.x += 200;
-// pathRectCopy.smooth();
-
-// var circlePath = new Path.Circle(new Point(150, 150), 50);
-// circlePath.strokeColor = "black";
-// circlePath.selected = true;
-// circlePath.removeSegment(2);
-// // circlePath.remove();
-
-// var myCircle = new Path.Circle(new Point(250, 250), 50);
-// myCircle.fillColor = "black";
-
-var rect = new Rectangle(new Point(50, 50), new Size(50, 50));
-var cornerSize = new Size(10, 10);
-var path = new Path.Rectangle(rect, cornerSize);
-path.fillColor = "#aad";
-path.selected = true;
-
-var triangle = new Path.RegularPolygon(new Point(100, 100), 3, 50);
-triangle.fillColor = "e9e9ff";
-triangle.selected = true;
-
-var decahedron = new Path.RegularPolygon(new Point(200, 200), 10, 50);
-decahedron.fillColor = "e9e9ff";
-decahedron.selected = true;
-
-var star = new Path.Star(new Point(300, 300), 5, 25, 10);
-star.fillColor = "black";
-
-
-var myPath = new Path({
-    segments: [[40, 115], [80, 180], [200, 20]],
-    selected: true,
-    strokeWidth: 10,
-    // strokeCap: "round",
-    strokeJoin: "round",
-    strokeColor: "#f00"
-});
